@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUXILIO DE MIRA — Headtrick Ultimate Pro Panel</title>
+    <style>
+        /* Fuente Montserrat */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgb(6, 6, 12);
+            color: rgb(255, 255, 255);
+            position: relative;
+        }
+        
+        /* Fondo con partículas / energía púrpura neón */
+        .neon-bg {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle at center, rgba(168, 85, 247, 0.1) 0%, rgba(6, 6, 12, 0.95) 80%);
+        }
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #a855f7;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #a855f7, 0 0 15px #8b5cf6;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+        .particle:nth-child(1) { left: 10%; animation-duration: 4s; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 25%; animation-duration: 5s; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 40%; animation-duration: 3.5s; animation-delay: 0.5s; }
+        .particle:nth-child(4) { left: 55%; animation-duration: 4.5s; animation-delay: 2s; }
+        .particle:nth-child(5) { left: 70%; animation-duration: 3.8s; animation-delay: 1.2s; }
+        .particle:nth-child(6) { left: 85%; animation-duration: 4.2s; animation-delay: 0.3s; }
+
+        /* Contenedor Principal del Panel */
+        .panel-container {
+            position: relative;
+            z-index: 10;
+            width: 410px;
+            height: 750px;
+            max-width: 95vw;
+            max-height: 98vh;
+            background: rgba(10, 10, 20, 0.92);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.15), 0 30px 60px rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Cabecera */
+        .panel-header {
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+        }
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #f3e8ff;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+        .panel-title span.dot {
+            width: 8px;
+            height: 8px;
+            background-color: #a855f7;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7;
+        }
+        .status-badge {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            color: #a855f7;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Cuerpo con Menú Lateral y Contenido */
+        .panel-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar Izquierdo */
+        .sidebar {
+            width: 95px;
+            background: rgba(7, 7, 15, 0.6);
+            border-right: 1px solid rgba(168, 85, 247, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding-top: 15px;
+            position: relative;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 0;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 500;
+            transition: 0.2s;
+            position: relative;
+        }
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 6px;
+            fill: currentColor;
+        }
+        .nav-item:hover {
+            color: #9ca3af;
+        }
+        .nav-item.active {
+            color: #a855f7;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+        }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15px;
+            bottom: 15px;
+            width: 3px;
+            background: #a855f7;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 12px #a855f7;
+        }
+
+        /* Contenido de las pestañas */
+        .content-area {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+        }
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tarjetas de Opciones Generales */
+        .option-card {
+            background: rgba(17, 17, 30, 0.8);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 14px;
+            padding: 13px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .option-info h4 {
+            font-size: 12px;
+            font-weight: 700;
+            color: #f3f4f6;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .option-info p {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* Interruptor Toggle Estilizado */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: rgba(30, 30, 45, 0.9);
+            transition: .3s;
+            border-radius: 22px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #a855f7;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Botón de Inyección */
+        .btn-inject {
+            width: 100%;
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #a855f7, #8b5cf6);
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+        .btn-inject:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.7);
+        }
+        .btn-inject:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Terminal de Códigos e Inyección */
+        .console-container {
+            margin-top: 15px;
+            background: rgba(5, 5, 12, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 10px 12px;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 0 10px rgba(168, 85, 247, 0.1);
+        }
+        .console-header {
+            font-size: 10px;
+            font-weight: 700;
+            color: #a855f7;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            display: flex;
+            justify-content: space-between;
+        }
+        .console-logs {
+            flex: 1;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10px;
+            line-height: 1.5;
+            color: #c084fc;
+        }
+        .console-logs::-webkit-scrollbar {
+            width: 4px;
+        }
+        .console-logs::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.4);
+            border-radius: 4px;
+        }
+        .log-line {
+            margin-bottom: 3px;
+            word-break: break-all;
+        }
+        .log-success {
+            color: #4ade80;
+            font-weight: 600;
+        }
+        .log-code {
+            color: #38bdf8;
+        }
+
+        /* Engine Panel */
+        .engine-panel {
+            background: rgba(10, 10, 20, 0.95);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: inset 0 0 30px rgba(168, 85, 247, 0.08), 0 0 20px rgba(139, 92, 246, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .engine-title {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 800;
+            color: #d8b4fe;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+        .engine-subtitle {
+            text-align: center;
+            font-size: 9px;
+            color: #7e22ce;
+            margin-top: -6px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+        }
+
+        /* Contenedor Alvo Ativo */
+        .alvo-box {
+            background: rgba(10, 10, 20, 0.95);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 8px 10px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+        }
+        .alvo-label {
+            font-size: 9px;
+            letter-spacing: 1.2px;
+            color: #a855f7;
+            font-weight: 700;
+            margin-bottom: 2px;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+        }
+        .character-preview {
+            height: 145px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .target-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #a855f7;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #a855f7, 0 0 20px #8b5cf6;
+            transition: 0.3s ease-in-out;
+            pointer-events: none;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            opacity: 0;
+        }
+        .target-dot.head {
+            display: block;
+            opacity: 1;
+            top: 14px;
+        }
+        .target-dot.neck {
+            display: block;
+            opacity: 1;
+            top: 38px;
+        }
+
+        .target-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .target-btn {
+            flex: 1;
+            padding: 7px;
+            background: rgba(15, 15, 25, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 8px;
+            color: #d8b4fe;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .target-btn.active {
+            background: #a855f7;
+            color: #fff;
+            border-color: #a855f7;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+        }
+
+        .game-launch-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #a855f7, #7e22ce);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: #fff;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(139, 92, 246, 0.4);
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+        .game-launch-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 18px rgba(168, 85, 247, 0.6);
+        }
+
+        /* Elementos de Device */
+        .device-card {
+            background: rgba(17, 17, 30, 0.8);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .device-card span {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .device-card strong {
+            font-size: 12px;
+            color: #a855f7;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fondo dinámico con partículas -->
+    <div class="neon-bg">
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    </div>
+
+    <!-- Panel Principal -->
+    <div class="panel-container" id="panelContainer">
+        <!-- Cabecera -->
+        <div class="panel-header">
+            <div class="panel-title">
+                <span class="dot"></span> AUXILIO DE MIRA
+            </div>
+            <div class="status-badge">SECURE: ACTIVE</div>
+        </div>
+
+        <!-- Cuerpo Dividido en Sidebar y Contenido -->
+        <div class="panel-body">
+            <!-- Sidebar Lateral -->
+            <div class="sidebar">
+                <div class="nav-item active" onclick="switchTab('auxilio', this)">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 5h2v2h-2zm0-4h2v2h-2zm0 8h2v2h-2zm-4-4h2v2H7zm8 0h2v2h-2z"/></svg>
+                    Auxilio
+                </div>
+                <div class="nav-item" onclick="switchTab('engine', this)">
+                    <svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg>
+                    Engine
+                </div>
+                <div class="nav-item" onclick="switchTab('device', this)">
+                    <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+                    Device
+                </div>
+            </div>
+
+            <!-- Contenido de las pestañas -->
+            <div class="content-area">
+                <!-- Pestaña 1: Auxilio -->
+                <div class="tab-pane active" id="tab-auxilio">
+                    <div class="option-card">
+                        <div class="option-info">
+                            <h4>AUXILIO 80%</h4>
+                            <p>AUMENTA A TAXA DE CAPA!</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="chkAuxilio">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="option-card">
+                        <div class="option-info">
+                            <h4>REDUZIR RECOIL</h4>
+                            <p>ESTABILIZA A MIRA!</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="chkRecoil">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="option-card">
+                        <div class="option-info">
+                            <h4>REDUZIR LAG</h4>
+                            <p>MELHORA O DESEMPENHO!</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="chkLag">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <button class="btn-inject" id="btnInject" onclick="injectConfig()">INJECT FFH4X</button>
+
+                    <!-- Terminal Console -->
+                    <div class="console-container">
+                        <div class="console-header">
+                            <span>AUXILIO INJECTOR</span>
+                        </div>
+                        <div class="console-logs" id="consoleLogs">
+                            <div class="log-line">> Ready for execution...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestaña 2: Engine -->
+                <div class="tab-pane" id="tab-engine">
+                    <div class="engine-panel">
+                        <div class="engine-title">AUXILIO FFH4X</div>
+                        <div class="engine-subtitle">COPYRIGHT REBORN</div>
+
+                        <div class="alvo-box">
+                            <div class="alvo-label">ALVO ATIVO</div>
+                            <div class="character-preview">
+                                <svg width="65" height="120" viewBox="0 0 100 180" fill="#ffffff">
+                                    <circle cx="50" cy="25" r="18"/>
+                                    <path d="M30 55 C30 48, 70 48, 70 55 L75 85 C75 90, 70 95, 65 95 L58 95 L62 130 C62 135, 58 140, 53 140 L47 140 C42 140, 38 135, 38 130 L42 95 L35 95 C30 95, 25 90, 25 85 Z"/>
+                                    <path d="M 38 130 L 34 176 C 33 181, 41 183, 44 176 L 49 145 C 49.5 143, 50.5 143, 51 145 L 56 176 C 59 183, 67 181, 66 176 L 62 130 Z" />
+                                </svg>
+                                <div class="target-dot" id="targetIndicator"></div>
+                            </div>
+                            <div class="target-buttons">
+                                <button class="target-btn" id="btnCabeca" onclick="setTarget('cabeca')">CABEÇA</button>
+                                <button class="target-btn" id="btnPescoco" onclick="setTarget('pescoco')">PESCOÇO</button>
+                            </div>
+                        </div>
+
+                        <button class="game-launch-btn" onclick="launchGame('Free Fire')">▶ ABRIR FREE FIRE</button>
+                        <button class="game-launch-btn" style="background: linear-gradient(135deg, #7e22ce, #581c87); margin-top: 2px;" onclick="launchGame('Free Fire Max')">▶ ABRIR FREE FIRE MAX</button>
+                    </div>
+                </div>
+
+                <!-- Pestaña 3: Device -->
+                <div class="tab-pane" id="tab-device">
+                    <div class="device-card">
+                        <span>System Version</span>
+                        <strong>1.0 beta</strong>
+                    </div>
+                    <div class="device-card">
+                        <span>Hardware</span>
+                        <strong>iOS Device</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isInjecting = false;
+        let hasInjected = false; // Control de inyección única
+
+        // Cambiar pestañas
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Selección de Objetivo Engine
+        function setTarget(target) {
+            const indicator = document.getElementById('targetIndicator');
+            const btnCabeca = document.getElementById('btnCabeca');
+            const btnPescoco = document.getElementById('btnPescoco');
+
+            if (target === 'cabeca') {
+                indicator.className = "target-dot head";
+                btnCabeca.classList.add('active');
+                btnPescoco.classList.remove('active');
+            } else if (target === 'pescoco') {
+                indicator.className = "target-dot neck";
+                btnPescoco.classList.add('active');
+                btnCabeca.classList.remove('active');
+            }
+        }
+
+        // Generar todas las armas de Free Fire y bloquer reinyección
+        function injectConfig() {
+            // Si ya está inyectando o ya fue inyectado previamente, se detiene
+            if (isInjecting || hasInjected) return;
+            isInjecting = true;
+
+            const logsContainer = document.getElementById('consoleLogs');
+            const btnInject = document.getElementById('btnInject');
+
+            logsContainer.innerHTML = '';
+            btnInject.disabled = true;
+
+            const fullWeaponList = [
+                "> Initializing Memory Scanner...",
+                "> Hooking Free Fire Engine Process...",
+                // Rifles de Asalto (AR)
+                "[M4A1] Injecting Aimlock Code: <span class='log-code'>0x7F80A2B1</span> [ON]",
+                "[AK47] Recoil Reduction Matrix: <span class='log-code'>0x89C104EF</span> [ON]",
+                "[M14] Headshot Magnet: <span class='log-code'>0x1102A7C0</span> [ON]",
+                "[SCAR] Bullet Spread Fix: <span class='log-code'>0x32A49B01</span> [ON]",
+                "[GROZA] Auto-Aim Tracking: <span class='log-code'>0x992B10AC</span> [ON]",
+                "[FAMAS] Burst Accuracy Boost: <span class='log-code'>0x44A003E1</span> [ON]",
+                "[XM8] Stability Vector: <span class='log-code'>0x55B190FF</span> [ON]",
+                "[AN94] Damage Precision: <span class='log-code'>0x770110A4</span> [ON]",
+                "[PLASMA] Thermal Lock: <span class='log-code'>0x88219011</span> [ON]",
+                "[AUG] Scope Stabilizer: <span class='log-code'>0x011933AB</span> [ON]",
+                "[PARAFAL] Power Aim Alignment: <span class='log-code'>0x661009DF</span> [ON]",
+                "[KORD] Heavy Recoil Lock: <span class='log-code'>0x12039AC1</span> [ON]",
+                "[G36] Hybrid Mode Hook: <span class='log-code'>0x883011B8</span> [ON]",
+                // Subametralladoras (SMG)
+                "[UMP] Capa Magnet Offset: <span class='log-code'>0x33B101FE</span> [ON]",
+                "[MP5] Rapid Drag Fix: <span class='log-code'>0x4421C009</span> [ON]",
+                "[VSS] Silent Lock: <span class='log-code'>0x8811A2B2</span> [ON]",
+                "[MP40] Anti-Recoil Ultra: <span class='log-code'>0x773019AC</span> [ON]",
+                "[P90] Rate of Fire Hook: <span class='log-code'>0x221088E1</span> [ON]",
+                "[CG15] Charge Aimlock: <span class='log-code'>0x112099B3</span> [ON]",
+                "[THOMPSON] Drag Lock Vector: <span class='log-code'>0x334088A1</span> [ON]",
+                "[VECTOR] Akimbo Sync Code: <span class='log-code'>0x551077C9</span> [ON]",
+                "[MAC10] Ultra Fast Aimlock: <span class='log-code'>0x992011FA</span> [ON]",
+                "[BISON] Stability Control: <span class='log-code'>0x441099E2</span> [ON]",
+                // Escopetas (SG)
+                "[M1014] One-Tap Matrix: <span class='log-code'>0x773011A8</span> [ON]",
+                "[SPAS12] Tight Spread Fix: <span class='log-code'>0x882099B1</span> [ON]",
+                "[M1887] High Damage Lock: <span class='log-code'>0x110299C3</span> [ON]",
+                "[MAG-7] Fire Rate Stabilizer: <span class='log-code'>0x332011A9</span> [ON]",
+                "[CHARGE BUSTER] Charge Sync: <span class='log-code'>0x771099B2</span> [ON]",
+                "[TREATMENT SHOTGUN] Aim Offset: <span class='log-code'>0x882011E4</span> [ON]",
+                // Rifles de Tirador / Francotiradores
+                "[SKS] Headshot Calibration: <span class='log-code'>0x993011B8</span> [ON]",
+                "[DRAGUNOV] Critical Precision: <span class='log-code'>0x112088A1</span> [ON]",
+                "[WOODPECKER] Drag Lock Pro: <span class='log-code'>0x331077C2</span> [ON]",
+                "[AC80] One-Shot Precision: <span class='log-code'>0x552099E1</span> [ON]",
+                "[AWM] Auto Scope Tracking: <span class='log-code'>0x771088A9</span> [ON]",
+                "[KAR98K] Biometric Scope Fix: <span class='log-code'>0x882011B3</span> [ON]",
+                "[M24] Fast Reload Hook: <span class='log-code'>0x110299A2</span> [ON]",
+                "[M82B] Anti-Gloo Wall Lock: <span class='log-code'>0x332088C1</span> [ON]",
+                // Pistolas
+                "[USP] Secondary Aimlock: <span class='log-code'>0x551099A8</span> [ON]",
+                "[DESERT EAGLE] One-Tap Red Dot: <span class='log-code'>0x772011C3</span> [ON]",
+                "[G18] Rapid Fire Hook: <span class='log-code'>0x881099A2</span> [ON]",
+                "[M1873] Mini Shotgun Lock: <span class='log-code'>0x112088C9</span> [ON]",
+                "[M500] Head Precision: <span class='log-code'>0x331099A1</span> [ON]",
+                "[TREATMENT PISTOL] Auto Sync: <span class='log-code'>0x552011B2</span> [ON]",
+                "[FF KNIFE] Throw Vector: <span class='log-code'>0x771099A3</span> [ON]",
+                // Ametralladoras Pesadas y Especiales
+                "[M60] Sustained Fire Hook: <span class='log-code'>0x882011C9</span> [ON]",
+                "[GATLING] Rotation Stabilizer: <span class='log-code'>0x772011A8</span> [ON]",
+                "> Bypassing Security Protocols...",
+                "✔ AUXILIO INYECTADO CON ÉXITO!"
+            ];
+
+            let index = 0;
+
+            const interval = setInterval(() => {
+                if (index < fullWeaponList.length) {
+                    const lineText = fullWeaponList[index];
+                    const div = document.createElement('div');
+                    
+                    if (index === fullWeaponList.length - 1) {
+                        div.className = 'log-line log-success';
+                    } else {
+                        div.className = 'log-line';
+                    }
+                    
+                    div.innerHTML = lineText;
+                    logsContainer.appendChild(div);
+                    logsContainer.scrollTop = logsContainer.scrollHeight;
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    isInjecting = false;
+                    hasInjected = true; // Bloqueo permanente
+                    btnInject.disabled = true; // Queda deshabilitado
+                    btnInject.innerText = "AUXILIO INYECTADO"; // Cambia el texto
+                }
+            }, 1000);
+        }
+
+        // Abrir Juego mediante URL Scheme (Safari / iOS)
+        function launchGame(gameName) {
+            let scheme = "";
+            if (gameName === 'Free Fire') {
+                scheme = "freefire://";
+            } else if (gameName === 'Free Fire Max') {
+                scheme = "freefiremax://";
+            }
+
+            if (scheme) {
+                window.location.href = scheme;
+            }
+        }
+    </script>
+</body>
+</html>
